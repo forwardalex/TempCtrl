@@ -9,6 +9,8 @@
 #define MIN_TARGET_TEMP 22.0     // 最低目标温度
 #define MAX_TARGET_TEMP 30.0     // 最高目标温度
 #define TEMP_INCREASE 10.0        // 环境温度加温增量
+#define DEAD_ZONE 0.5      // 死区范围，用于避免在目标附近频繁开关
+
 float envTemp = 25 ;
 
 const  SWITCH switchs[SWITCH_NUMS]={
@@ -57,7 +59,11 @@ void UpdateSwitch(float* temps ,int size){
             // 如果环境温度在22到30之间，保持目标温度不变
             targetTemperature = envTemp; // 可以选择不加热
         };
-
+        if (nowNTCTemp<targetTemperature+DEAD_ZONE && nowNTCTemp>targetTemperature-DEAD_ZONE){
+            //在这区间内不做操作
+            continue;
+        }
+        // if 
         if (targetTemperature>nowNTCTemp){
             HeartOn=1;
         }else{
