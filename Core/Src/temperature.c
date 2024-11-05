@@ -59,12 +59,12 @@ void UpdateSwitch(float* temps ,int size){
             // 如果环境温度在22到30之间，保持目标温度不变
             targetTemperature = envTemp; // 可以选择不加热
         };
-        if (nowNTCTemp<targetTemperature+DEAD_ZONE && nowNTCTemp>targetTemperature-DEAD_ZONE){
+        if (nowNTCTemp>targetTemperature-DEAD_ZONE){
             //在这区间内不做操作
             continue;
         }
         // if 
-        if (targetTemperature>nowNTCTemp){
+        if (nowNTCTemp<targetTemperature){
             HeartOn=1;
         }else{
             HeartOn=0;
