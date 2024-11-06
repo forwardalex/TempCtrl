@@ -40,7 +40,8 @@ void controlHeater(int turnOn) {
 }
 
 void UpdateSwitch(float* temps ,int size){
-    float targetTemperature =25.f;
+    float targetTemperature =MIN_TARGET_TEMP;
+
     float nowNTCTemp ;
     int  HeartOn ;
     for(int i=0; i<size; i++){
@@ -60,10 +61,12 @@ void UpdateSwitch(float* temps ,int size){
             // 如果环境温度在22到30之间，保持目标温度不变
             targetTemperature = envTemp; // 可以选择不加热
         };
-        if (nowNTCTemp>targetTemperature-DEAD_ZONE && nowNTCTemp<= MAX_TARGET_TEMP){
+        if (targetTemperature<envTemp){
+            //目标温度小于外环境温度 没必要加热
+            continue;
+        }
+        if (nowNTCTemp>targetTemperature-DEAD_ZONE && nowNTCTemp<= MAX_TARGET_TEMP  ){
             //在这区间内不做操作
-
-
             continue;
         }
         // if 
@@ -76,7 +79,7 @@ void UpdateSwitch(float* temps ,int size){
         if (HeartOn){
 
             HAL_GPIO_WritePin(switch_leds[i].port,switch_leds[i].pin,GPIO_PIN_SET);
-            Lcd_print( 150,  140,  BLUE, "> N %.2f In %d  Tar  ",nowNTCTemp,i,targetTemperature);
+            Lcd_print( 150,  140,  BLUE, "> N %.2f In %d  %.2f",nowNTCTemp,i,targetTemperature);
 
         }else{
             HAL_GPIO_WritePin(switch_leds[i].port,switch_leds[i].pin,GPIO_PIN_RESET);
