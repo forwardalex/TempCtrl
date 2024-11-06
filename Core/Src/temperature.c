@@ -6,6 +6,7 @@
 #include <math.h>
 #include "stdint.h"
 #include "main.h"
+#include "lcd.h"
 #define MIN_TARGET_TEMP 22.0     // 最低目标温度
 #define MAX_TARGET_TEMP 30.0     // 最高目标温度
 #define TEMP_INCREASE 10.0        // 环境温度加温增量
@@ -39,7 +40,7 @@ void controlHeater(int turnOn) {
 }
 
 void UpdateSwitch(float* temps ,int size){
-    float targetTemperature;
+    float targetTemperature =25.f;
     float nowNTCTemp ;
     int  HeartOn ;
     for(int i=0; i<size; i++){
@@ -59,8 +60,10 @@ void UpdateSwitch(float* temps ,int size){
             // 如果环境温度在22到30之间，保持目标温度不变
             targetTemperature = envTemp; // 可以选择不加热
         };
-        if (nowNTCTemp>targetTemperature-DEAD_ZONE){
+        if (nowNTCTemp>targetTemperature-DEAD_ZONE && nowNTCTemp<= MAX_TARGET_TEMP){
             //在这区间内不做操作
+
+
             continue;
         }
         // if 
@@ -71,7 +74,9 @@ void UpdateSwitch(float* temps ,int size){
         }
 
         if (HeartOn){
+
             HAL_GPIO_WritePin(switch_leds[i].port,switch_leds[i].pin,GPIO_PIN_SET);
+            Lcd_print( 150,  140,  BLUE, "> N %.2f In %d  Tar  ",nowNTCTemp,i,targetTemperature);
 
         }else{
             HAL_GPIO_WritePin(switch_leds[i].port,switch_leds[i].pin,GPIO_PIN_RESET);

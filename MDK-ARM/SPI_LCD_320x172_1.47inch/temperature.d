@@ -36,4 +36,5 @@
   ../Drivers/STM32G4xx_HAL_Driver/Inc\stm32g4xx_hal_uart.h \
   ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
   D:\keil\ARM\ARMCLANG\Bin\..\include\float.h \
-  D:\keil\ARM\ARMCLANG\Bin\..\include\math.h ../Core/Inc\main.h
+  D:\keil\ARM\ARMCLANG\Bin\..\include\math.h ../Core/Inc\main.h \
+  ../Core/Inc\lcd.h ../Core/Inc/spi.h

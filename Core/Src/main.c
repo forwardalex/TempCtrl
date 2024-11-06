@@ -35,7 +35,7 @@
 /* USER CODE BEGIN PTD */
 #define ADC_BUFFER_SIZE   9
 #define TEMP_BUFFER_SIZE   5
-#define  ENV_TMP_INDEX     3
+#define  ENV_TMP_INDEX     4
 __IO uint16_t   adc_dma_buffer[ADC_BUFFER_SIZE];
 __IO float   		voltage[ADC_BUFFER_SIZE];
 __IO float   		temps[TEMP_BUFFER_SIZE];
@@ -133,11 +133,14 @@ int main(void)
     /* USER CODE BEGIN 3 */
 		for(int i=0; i<ADC_BUFFER_SIZE; i++) {
 			float val = (float)adc_dma_buffer[i] * scale ;
+            if (val<0.01f){
+                //去除无用数据
+                continue;
+            }
 			voltage[i]=val;
 			if (i<TEMP_BUFFER_SIZE){
                 temps[i]=GetTemperature(val);
                 if (i==ENV_TMP_INDEX){
-
                     envTemp = temps[ENV_TMP_INDEX];
                 }
             }
@@ -149,7 +152,7 @@ int main(void)
 			Lcd_print( 150,  50,  BLUE, "> ch4 %.2f",temps[3]);
 
 			Lcd_print( 0,  80,  BLUE, "> ch5 %.2f",temps[4]);
-			UpdateSwitch(temps,TEMP_BUFFER_SIZE);
+			UpdateSwitch(temps,TEMP_BUFFER_SIZE-1);
 			Lcd_print( 150,  80,  BLUE, "> ch6 %.2f",voltage[5]);
 	
 		
